@@ -6,27 +6,23 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>天氣預報📢</title>
+    <title>🌿 皮克敏天氣紀錄簿</title>
     <link rel="icon" type="image/png" href="./icon-v2.png" />
-    <link rel="apple-touch-icon" href="./icon-v2.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon-v2.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
-      rel="stylesheet"
-    />
 
     <style>
+      /* -----------------------------------------
+      🌿 Pikmin Adventure Style 皮克敏冒險筆記風
+    -------------------------------------------- */
+
       :root {
-        --ac-green: #7de1a9;
-        --ac-bg-pattern: #8fd8af;
-        --ac-cream: #fffef2;
-        --ac-yellow: #f9f195;
-        --ac-brown: #796452;
-        --ac-blue: #4fb5d9;
-        --ac-dark: #58504a;
-        --ac-card-border: #e6e0c8;
+        --leaf-green: #6cbf5f;
+        --forest-green: #3b6b41;
+        --light-leaf: #a8e6a3;
+        --earth-brown: #8b6f54;
+        --earth-paper: #faf6e8;
+        --sky-blue: #9dd9f3;
+        --soft-shadow: rgba(0, 0, 0, 0.15);
+        --card-shadow: rgba(0, 0, 0, 0.25);
       }
 
       * {
@@ -34,172 +30,178 @@
         padding: 0;
         box-sizing: border-box;
         -webkit-tap-highlight-color: transparent;
+        font-family: "Verdana", "Noto Sans TC", sans-serif;
       }
 
       body {
-        font-family: "Zen Maru Gothic", sans-serif;
-        background-color: var(--ac-green);
-        /* 更細緻的斜紋背景 */
-        background-image: repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 20px,
-          rgba(255, 255, 255, 0.2) 20px,
-          rgba(255, 255, 255, 0.2) 40px
-        );
+        /* 背景主體 */
+        background-image: url("./image.jpg");
+        background-size: cover; /* 自動填滿螢幕（手機 & 桌機通用） */
+        background-position: center; /* 圖片置中 */
+        background-repeat: no-repeat; /* 不重複 */
+        background-attachment: fixed; /* 桌機看起來更漂亮（視差效果） */
+
+        /* 顏色變柔和（疊加透明白色）*/
+        position: relative;
         min-height: 100vh;
-        color: var(--ac-dark);
-        /* 防止 iOS 左右滑動 */
         overflow-x: hidden;
-        padding-bottom: 20px;
       }
 
-      /* 頂部狀態列 */
+      /* 透明柔化層（不會影響前景）*/
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background: rgba(255, 255, 255, 0.6); /* ← 調整透明度：0~1 */
+        pointer-events: none; /* 不影響點擊 */
+        z-index: -1; /* 放在背景 */
+      }
+
+      /* -----------------------------------------
+      🌿 頂部「探險資訊列」
+    -------------------------------------------- */
       .status-bar {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 15px 20px;
-        background: rgba(255, 255, 255, 0.3);
-        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(6px);
+        border-bottom: 3px solid var(--earth-brown);
         position: sticky;
         top: 0;
         z-index: 100;
       }
 
       .location-pill {
-        background: var(--ac-yellow);
-        color: var(--ac-brown);
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-weight: 900;
-        font-size: 1.1rem;
-        transform: rotate(-2deg);
-        border: 2px solid white;
-        box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+        background: var(--sky-blue);
+        color: var(--forest-green);
+        padding: 6px 15px;
+        border-radius: 12px;
+        border: 3px solid white;
+        font-size: 1.2rem;
+        font-weight: bold;
+        box-shadow: 3px 3px 0 var(--earth-brown);
       }
 
       .update-pill {
-        font-size: 0.8rem;
-        color: white;
-        background: rgba(0, 0, 0, 0.2);
+        font-size: 0.85rem;
         padding: 4px 10px;
-        border-radius: 12px;
+        background: var(--earth-brown);
+        color: #fff;
+        border-radius: 8px;
+        box-shadow: 2px 2px 0 var(--forest-green);
       }
 
       .container {
         padding: 20px;
         max-width: 600px;
-        /* 限制在大手機寬度 */
         margin: 0 auto;
       }
 
-      /* === 核心：今日焦點卡片 === */
+      /* -----------------------------------------
+      🌿 今日焦點卡片（冒險筆記）
+    -------------------------------------------- */
       .hero-card {
-        background: var(--ac-cream);
-        border-radius: 35px;
-        padding: 30px 25px;
-        text-align: center;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        border: 4px solid white;
-        margin-bottom: 25px;
+        background: var(--earth-paper);
+        border-radius: 25px;
+        padding: 25px;
+        box-shadow: 6px 6px 0 var(--earth-brown);
+        border: 3px dashed var(--earth-brown);
         position: relative;
+        margin-bottom: 25px;
       }
 
-      /* 像動森的對話氣泡 */
       .hero-period {
         position: absolute;
         top: -15px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--ac-blue);
-        color: white;
-        padding: 5px 20px;
-        border-radius: 20px;
+        left: 20px;
+        background: var(--light-leaf);
+        color: var(--forest-green);
+        padding: 5px 15px;
+        border-radius: 12px;
         font-weight: bold;
         border: 3px solid white;
-        box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+        box-shadow: 3px 3px 0 var(--forest-green);
+        transform: rotate(-3deg);
       }
 
       .hero-temp-container {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
-        margin: 15px 0;
+        gap: 15px;
+        margin: 20px 0;
       }
 
       .hero-icon {
-        font-size: 5rem;
-        filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.1));
-        animation: bounce 3s infinite;
+        font-size: 4.8rem;
+        animation: pikminBounce 3s infinite;
       }
 
-      @keyframes bounce {
+      @keyframes pikminBounce {
         0%,
         100% {
           transform: translateY(0);
         }
-
         50% {
-          transform: translateY(-10px);
+          transform: translateY(-8px);
         }
       }
 
       .hero-temp {
-        font-size: 4.5rem;
-        font-weight: 900;
-        color: var(--ac-brown);
-        line-height: 1;
+        font-size: 4.2rem;
+        font-weight: bold;
+        color: var(--forest-green);
       }
 
       .hero-desc {
-        font-size: 1.5rem;
-        color: #8a7b70;
-        margin-bottom: 20px;
+        font-size: 1.3rem;
         font-weight: bold;
+        text-align: center;
+        color: var(--earth-brown);
+        margin-bottom: 15px;
       }
 
-      /* === 上班族最愛的：快速建議區 === */
+      /* -----------------------------------------
+      🌿 冒險建議卡片
+    -------------------------------------------- */
       .advice-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 15px;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 2px dashed #e0d8c0;
+        gap: 12px;
+        margin-top: 15px;
       }
 
       .advice-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.5);
+        background: var(--sky-blue);
         padding: 10px;
-        border-radius: 20px;
+        border-radius: 15px;
+        text-align: center;
+        border: 3px solid white;
+        box-shadow: 4px 4px 0 var(--forest-green);
       }
 
       .advice-icon {
         font-size: 2rem;
-        margin-bottom: 5px;
       }
 
       .advice-text {
-        font-size: 1.4rem;
-        font-weight: 900;
-        color: var(--ac-brown);
-        margin: 5px 0;
-        line-height: 1.2;
+        font-size: 1.1rem;
+        font-weight: bold;
+        margin-top: 5px;
+        color: var(--forest-green);
       }
 
-      /* === 稍後預報：橫向滑動區 === */
+      /* -----------------------------------------
+      🌿 稍後預報（冒險便條小卡）
+    -------------------------------------------- */
       .section-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
         color: white;
-        margin-bottom: 15px;
-        margin-left: 10px;
-        font-weight: 900;
-        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+        font-weight: bold;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 0 var(--forest-green);
       }
 
       .scroll-container {
@@ -207,56 +209,42 @@
         overflow-x: auto;
         gap: 15px;
         padding-bottom: 10px;
-        /* 隱藏滾動條但保留功能 */
         scrollbar-width: none;
-        -ms-overflow-style: none;
       }
-
       .scroll-container::-webkit-scrollbar {
         display: none;
       }
 
       .mini-card {
         min-width: 140px;
-        background: rgba(255, 255, 255, 0.85);
-        border-radius: 25px;
-        padding: 20px 15px;
+        background: var(--earth-paper);
+        border-radius: 20px;
+        padding: 15px;
         text-align: center;
-        border: 3px solid white;
-        flex-shrink: 0;
-        /* 防止被擠壓 */
+        border: 3px dashed var(--earth-brown);
+        box-shadow: 4px 4px 0 var(--earth-brown);
+        transform: rotate(-2deg);
       }
 
       .mini-time {
-        background: var(--ac-green);
-        color: white;
-        padding: 3px 10px;
+        background: var(--light-leaf);
+        padding: 4px 10px;
         border-radius: 10px;
-        font-size: 0.8rem;
-        display: inline-block;
-        margin-bottom: 10px;
         font-weight: bold;
+        margin-bottom: 8px;
+        border: 2px solid white;
       }
 
-      .mini-icon {
-        font-size: 2.5rem;
-        margin: 5px 0;
-      }
-
-      .mini-temp {
-        font-size: 1.2rem;
-        font-weight: 800;
-        color: var(--ac-dark);
-      }
-
-      /* Loading 畫面 */
+      /* -----------------------------------------
+      🌿 Loading 畫面（皮克敏探險氣氛）
+    -------------------------------------------- */
       .loading-screen {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
-        background: var(--ac-green);
+        background: var(--leaf-green);
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -268,20 +256,20 @@
 
   <body>
     <div id="loading" class="loading-screen">
-      <div style="font-size: 4rem; animation: bounce 2s infinite">☁️</div>
+      <div style="font-size: 4rem; animation: pikminBounce 2s infinite">🌱</div>
       <p style="color: white; font-weight: bold; margin-top: 20px">
-        正在觀測雲的流動...
+        正在喚醒皮克敏們…
       </p>
     </div>
+
     <div class="status-bar">
-      <div class="location-pill">📍 桃園</div>
-      <div id="updateTime" class="update-pill">更新中...</div>
+      <div class="location-pill">📍 探索中…</div>
+      <div id="updateTime" class="update-pill">更新中</div>
     </div>
 
     <div class="container" id="mainContent" style="display: none">
       <div id="heroCard"></div>
-
-      <h3 class="section-title">稍後預報</h3>
+      <h3 class="section-title">稍後天氣</h3>
       <div class="scroll-container" id="futureForecasts"></div>
     </div>
 
@@ -295,22 +283,24 @@
         if (weather.includes("陰")) return "☁️";
         if (weather.includes("雨")) return "🌧️";
         if (weather.includes("雷")) return "⛈️";
-        return "🌤️";
+        return "🌱";
       }
 
       function getAdvice(rainProb, maxTemp) {
-        let rainIcon = "🌂";
-        let rainText = "不用帶傘";
+        let rainIcon = "🌿";
+        let rainText = "天氣穩定";
+
         if (parseInt(rainProb) > 30) {
-          rainIcon = "☂️";
-          rainText = "記得帶傘！";
+          rainIcon = "🍃";
+          rainText = "可能會下雨";
         }
 
-        let clothIcon = "👕";
-        let clothText = "舒適穿搭";
+        let clothIcon = "🧢";
+        let clothText = "普通穿搭";
+
         if (parseInt(maxTemp) >= 28) {
-          clothIcon = "🎽";
-          clothText = "短袖出發";
+          clothIcon = "👕";
+          clothText = "短袖舒適";
         } else if (parseInt(maxTemp) <= 20) {
           clothIcon = "🧥";
           clothText = "加件外套";
@@ -332,10 +322,8 @@
         const forecasts = data.forecasts;
         const current = forecasts[0];
 
-        // 顯示城市
         document.querySelector(".location-pill").innerHTML = `📍 ${data.city}`;
 
-        // 建議
         const advice = getAdvice(current.rain, current.maxTemp);
 
         const period = getTimePeriod(current.startTime);
@@ -344,35 +332,28 @@
         );
 
         document.getElementById("heroCard").innerHTML = `
-          <div class="hero-card">
-            <div class="hero-period">${period}</div>
-            <div class="hero-temp-container">
-              <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
-              <div class="hero-temp">${avgTemp}°</div>
+        <div class="hero-card">
+          <div class="hero-period">${period}</div>
+          <div class="hero-temp-container">
+            <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
+            <div class="hero-temp">${avgTemp}°</div>
+          </div>
+          <div class="hero-desc">${current.weather}</div>
+
+          <div class="advice-grid">
+            <div class="advice-item">
+              <div class="advice-icon">${advice.rainIcon}</div>
+              <div class="advice-text">${advice.rainText}</div>
             </div>
-            <div class="hero-desc">${current.weather}</div>
 
-            <div class="advice-grid">
-              <div class="advice-item">
-                <div class="advice-icon">${advice.rainIcon}</div>
-                <div class="advice-text">${advice.rainText}</div>
-                <div style="font-size:0.7rem; color:#999">降雨率 ${
-                  current.rain
-                }</div>
-              </div>
-
-              <div class="advice-item">
-                <div class="advice-icon">${advice.clothIcon}</div>
-                <div class="advice-text">${advice.clothText}</div>
-                <div style="font-size:0.7rem; color:#999">最高溫 ${
-                  current.maxTemp
-                }°</div>
-              </div>
+            <div class="advice-item">
+              <div class="advice-icon">${advice.clothIcon}</div>
+              <div class="advice-text">${advice.clothText}</div>
             </div>
           </div>
-        `;
+        </div>
+      `;
 
-        // 渲染稍後預報
         const today = new Date().getDate();
         const scroll = document.getElementById("futureForecasts");
         scroll.innerHTML = "";
@@ -383,21 +364,24 @@
           if (fDate !== today) p = "明天" + p;
 
           scroll.innerHTML += `
-            <div class="mini-card">
-              <div class="mini-time">${p}</div>
-              <div class="mini-icon">${getWeatherIcon(f.weather)}</div>
-              <div class="mini-temp">${f.minTemp}° - ${f.maxTemp}°</div>
-              <div style="font-size:0.8rem; color:#888;">💧${f.rain}</div>
-            </div>
-          `;
+          <div class="mini-card">
+            <div class="mini-time">${p}</div>
+            <div style="font-size:2.4rem">${getWeatherIcon(f.weather)}</div>
+            <div style="font-size:1.1rem;font-weight:bold">${f.minTemp}° ~ ${
+            f.maxTemp
+          }°</div>
+            <div style="font-size:0.8rem;margin-top:5px;color:#666">💧${
+              f.rain
+            }</div>
+          </div>
+        `;
         });
 
-        // 更新時間
         const now = new Date();
         const days = ["週日", "週一", "週二", "週三", "週四", "週五", "週六"];
-        document.getElementById("updateTime").textContent = `${
+        document.getElementById("updateTime").innerText = `${
           now.getMonth() + 1
-        }月${now.getDate()}日 ${days[now.getDay()]}`;
+        }月${now.getDate()}日 (${days[now.getDay()]})`;
       }
 
       function fetchWeatherByGPS() {
@@ -414,7 +398,7 @@
             loadWeather(url);
           },
           () => {
-            loadWeather(API_BASE); // fallback → 桃園
+            loadWeather(API_BASE);
           }
         );
       }
@@ -424,8 +408,6 @@
           const delay = new Promise((r) => setTimeout(r, 1500));
           const dataPromise = fetch(url).then((r) => r.json());
           const [_, result] = await Promise.all([delay, dataPromise]);
-
-          if (!result.success) throw new Error();
 
           renderWeather(result.data);
 
